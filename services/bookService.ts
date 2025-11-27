@@ -99,18 +99,21 @@ export function getDefaultBookId(): string {
  * First tries to get from API (for dynamic discovery), then falls back to hardcoded list
  */
 export async function listAvailableBooks(): Promise<string[]> {
-  try {
-    // Try to get books from API (for dynamically uploaded books)
-    const response = await fetch(withBaseUrl('/api/books'));
-    if (response.ok) {
-      const data = await response.json();
-      if (data.success && Array.isArray(data.bookIds) && data.bookIds.length > 0) {
-        return data.bookIds;
+  // In production (GitHub Pages), API endpoints don't exist, so skip the API call
+  // Only try API in development mode where the Vite dev server provides the endpoints
+  if (import.meta.env.DEV) {
+    try {
+      // Try to get books from API (for dynamically uploaded books)
+      const response = await fetch(withBaseUrl('/api/books'));
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && Array.isArray(data.bookIds) && data.bookIds.length > 0) {
+          return data.bookIds;
+        }
       }
+    } catch (error) {
+      // API might not be available, fall through to hardcoded list
     }
-  } catch (error) {
-    // API might not be available (e.g., in production on GitHub Pages)
-    // Silently fall through to hardcoded list
   }
 
   // Fallback to hardcoded list of books that actually exist
