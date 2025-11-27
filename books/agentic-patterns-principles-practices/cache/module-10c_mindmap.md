@@ -1,0 +1,74 @@
+# Context Compression
+- **Motivation**
+    - Extract key decisions
+    - Focus on essential details
+    - Apply context compression
+- **Pattern Overview**
+    - Techniques for LLM context
+    - Use for large information
+    - Importance of compression
+- **Key Concepts**
+    - **Finite Context Window**
+    - **Externalized Memory**
+    - **Restorable Compression**
+    - **Contextual Pruning**
+    - **Summarization**
+    - **Chunking**
+    - **Attention Manipulation**
+- **How It Works**
+    - Externalize large data
+    - Maintain restorable references
+    - Just-in-time retrieval
+    - Summarize context history
+    - Prune and prioritize
+    - Manipulate attention
+- **When to Use**
+    - Process large documents
+    - Maintain long histories
+    - Work with unstructured data
+    - Implement multi-step agents
+    - Optimize cost and latency
+- **Avoid When**
+    - Fits within context limits
+    - Simple single-turn tasks
+    - Real-time retrieval unacceptable
+    - Critical information loss
+- **Decision Guidelines**
+    - Layered strategy
+    - Externalize large data first
+    - Summarize and prune remaining
+    - Maintain restorable references
+- **Practical Applications**
+    - **Research Agents**
+    - **Code Generation Agents**
+    - **Long-Running Conversations**
+    - **Document Processing**
+    - **Multi-Agent Systems**
+    - **RAG Systems**
+    - **Planning Agents**
+- **Implementation**
+    - Prerequisites for libraries
+    - Basic example of manager
+    - Advanced example of pruning
+- **Key Takeaways**
+    - Core strategy importance
+    - Primary method of externalization
+    - Layered approach necessity
+    - Performance impact of compression
+    - Common pitfalls to avoid
+    - Best practices for monitoring
+- **Related Patterns**
+    - Leverage external memory
+    - Persistent task list
+    - Memory management
+    - Knowledge retrieval
+    - Stable, append-only context
+    - Tool result management
+    - Multi-agent architectures
+- **References**
+    - Agentic AI System Design Patterns
+    - Context Engineering for AI Agents
+    - LangChain Memory Management
+    - Google ADK Sessions
+    - Context Compression Techniques
+    - Lost in the Middle

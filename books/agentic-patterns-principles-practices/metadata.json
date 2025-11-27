@@ -1,0 +1,259 @@
+{
+  "name": "AI Agents: Patterns, Principles & Practices",
+  "description": "An interactive, live-updating book on Agentic Design Patterns.",
+  "author": "George Kour",
+  "originalBook": {
+    "title": "Agentic Design Patterns: A Hands-On Guide to Building Intelligent Systems",
+    "author": "Antonio Gulli",
+    "publisher": "Springer",
+    "isbn": "978-3032014018",
+    "url": "https://www.amazon.com/Agentic-Design-Patterns-Hands-Intelligent/dp/3032014018/"
+  },
+  "requestFramePermissions": [],
+  "parts": [
+    {
+      "id": "part-1",
+      "title": "Introduction & Foundations",
+      "description": "Getting started with agentic AI systems",
+      "modules": [
+    {
+      "id": "module-0",
+      "title": "About",
+      "description": "Attribution and source information.",
+      "path": "chapters/about/module.md"
+    },
+    {
+      "id": "module-1",
+      "title": "Preface",
+      "description": "High-level introduction to the agentic era, the book's purpose, structure, and how to use it effectively.",
+      "path": "chapters/preface/module.md"
+    },
+    {
+      "id": "module-2",
+      "title": "Introduction - Foundations of Agentic Systems",
+      "description": "Understanding the shift from Generative AI to Agentic AI, and the core differences between Workflows and Agents.",
+      "path": "chapters/introduction/module.md"
+    },
+    {
+      "id": "module-2a",
+      "title": "What is an Agentic Design Pattern?",
+      "description": "Understanding what design patterns are, how they differ from implementations and frameworks, and how to use patterns effectively in agentic systems.",
+      "path": "chapters/what-is-a-design-pattern/module.md"
+    }
+      ]
+    },
+    {
+      "id": "part-2",
+      "title": "Core Workflow Patterns",
+      "description": "Fundamental patterns for building agent workflows",
+      "modules": [
+    {
+      "id": "module-3",
+      "title": "Pattern: Prompt Chaining (Pipeline Pattern)",
+      "description": "Breaking down complex tasks into sequential, manageable workflows. The foundational pattern for building reliable multi-step LLM systems.",
+      "path": "chapters/prompt-chaining/module.md"
+    },
+    {
+      "id": "module-4",
+      "title": "Pattern: Routing",
+      "description": "Dynamically selecting between multiple potential actions based on input, state, or conditions, introducing conditional logic into agent workflows.",
+      "path": "chapters/routing/module.md"
+    },
+    {
+      "id": "module-5",
+      "title": "Pattern: Parallelization",
+      "description": "Executing multiple independent operations simultaneously to improve efficiency and reduce latency in agent workflows.",
+      "path": "chapters/parallelization/module.md"
+    },
+    {
+      "id": "module-6",
+      "title": "Pattern: Reflection",
+      "description": "Enabling agents to review, critique, and refine their own outputs through iterative self-evaluation and improvement cycles.",
+      "path": "chapters/reflection/module.md"
+    }
+      ]
+    },
+    {
+      "id": "part-3",
+      "title": "Tool Use & Execution",
+      "description": "Designing the Agent-Computer Interface",
+      "modules": [
+    {
+      "id": "module-7",
+      "title": "Pattern: Tool Use & Execution",
+      "description": "Designing the Agent-Computer Interface (ACI). Best practices for tool definitions and result management.",
+      "path": "chapters/tool-use/module.md"
+    },
+    {
+      "id": "module-7a",
+      "title": "Pattern: Constrained Tool Use (Mask, Don't Remove)",
+      "description": "Managing tool availability through programmatic constraints (logit masking) rather than dynamically modifying tool definitions, preserving KV-Cache efficiency and preventing model confusion.",
+      "path": "chapters/constrained-tool-use/module.md"
+    }
+      ]
+    },
+    {
+      "id": "part-4",
+      "title": "Reasoning & Planning",
+      "description": "Enabling agents to plan and reason effectively",
+      "modules": [
+    {
+      "id": "module-19",
+      "title": "Reasoning Techniques",
+      "description": "Core algorithms for agency: Chain-of-Thought, ReAct Loops, and Tree-of-Thought strategies.",
+      "path": "chapters/reasoning-techniques/module.md"
+    },
+    {
+      "id": "module-8",
+      "title": "Pattern: Planning",
+      "description": "Enabling agents to create structured plans before execution, breaking down complex goals into actionable steps.",
+      "path": "chapters/planning/module.md"
+    },
+
+    {
+      "id": "module-22",
+      "title": "Pattern: Prioritization",
+      "description": "Enabling agents to assess and rank tasks, objectives, or actions based on significance, urgency, dependencies, and criteria.",
+      "path": "chapters/prioritization/module.md"
+    }
+      ]
+    },
+    {
+      "id": "part-5",
+      "title": "Memory & Context Management",
+      "description": "Managing context windows and externalizing memory",
+      "modules": [
+    {
+      "id": "module-10",
+      "title": "Memory Management",
+      "description": "How to manage the context window, externalize memory, and use recitation patterns to keep agents on track.",
+      "path": "chapters/memory-management/module.md"
+    },
+    {
+      "id": "module-10a",
+      "title": "Pattern: Persistent Task List (Recitation)",
+      "description": "A context engineering strategy where agents maintain a running plan and continuously append it to context to maintain goal alignment in long-horizon tasks.",
+      "path": "chapters/recitation/module.md"
+    },
+    {
+      "id": "module-10b",
+      "title": "Pattern: Leverage External Memory (Filesystem as Context)",
+      "description": "Treating external persistent storage as an unlimited extension of the agent's working memory, enabling restorable compression and just-in-time retrieval of large data.",
+      "path": "chapters/external-memory/module.md"
+    },
+    {
+      "id": "module-10c",
+      "title": "Context Compression: Managing the Finite Window",
+      "description": "Comprehensive techniques for fitting necessary information into the LLM's finite context window through externalization, summarization, pruning, and attention manipulation.",
+      "path": "chapters/context-compression/module.md"
+    }
+      ]
+    },
+    {
+      "id": "part-6",
+      "title": "Multi-Agent Systems",
+      "description": "Scaling up with multiple agents working together",
+      "modules": [
+    {
+      "id": "module-9",
+      "title": "Multi-Agent Architectures",
+      "description": "Scaling up: Orchestrator-Workers, Evaluator-Optimizers, and Swarm patterns.",
+      "path": "chapters/multi-agent/module.md"
+    },
+    {
+      "id": "module-9a",
+      "title": "Pattern: Orchestrator-Worker (Coordinator)",
+      "description": "A central orchestrator dynamically breaks down complex goals into subtasks, delegates to specialized workers, and synthesizes results. The most common pattern for complex multi-agent tasks.",
+      "path": "chapters/orchestrator-worker/module.md"
+    }
+      ]
+    },
+    {
+      "id": "part-7",
+      "title": "Advanced Capabilities",
+      "description": "Learning, protocols, goal management, and human interaction",
+      "modules": [
+    {
+      "id": "module-11",
+      "title": "Learning and Adaptation",
+      "description": "Enabling agents to improve their performance over time through experience, feedback, and adaptive mechanisms.",
+      "path": "chapters/learning-adaptation/module.md"
+    },
+    {
+      "id": "module-12",
+      "title": "Model Context Protocol (MCP)",
+      "description": "A standardized protocol for agents to discover, access, and interact with external tools and data sources.",
+      "path": "chapters/model-context-protocol/module.md"
+    },
+    {
+      "id": "module-13",
+      "title": "Goal Setting and Monitoring",
+      "description": "Establishing clear objectives and tracking progress toward goals, enabling agents to measure success and adapt strategies.",
+      "path": "chapters/goal-setting-monitoring/module.md"
+    },
+    {
+      "id": "module-14",
+      "title": "Pattern: Exception Handling and Recovery",
+      "description": "Robust error handling and recovery mechanisms that enable agents to gracefully handle failures and continue operation.",
+      "path": "chapters/exception-handling/module.md"
+    },
+    {
+      "id": "module-15",
+      "title": "Pattern: Human-in-the-Loop",
+      "description": "Integrating human oversight, feedback, and decision-making into agent workflows for safety, quality, and trust.",
+      "path": "chapters/human-in-the-loop/module.md"
+    }
+      ]
+    },
+    {
+      "id": "part-8",
+      "title": "Knowledge & Communication",
+      "description": "Retrieving knowledge and enabling agent communication",
+      "modules": [
+    {
+      "id": "module-16",
+      "title": "Pattern: Knowledge Retrieval (RAG)",
+      "description": "Enabling LLMs to access external knowledge bases through Retrieval-Augmented Generation, vector databases, and semantic search.",
+      "path": "chapters/knowledge-retrieval/module.md"
+    },
+    {
+      "id": "module-17",
+      "title": "Pattern: Inter-Agent Communication (A2A)",
+      "description": "Enabling agents to communicate, coordinate, and collaborate with each other through standardized protocols and interfaces.",
+      "path": "chapters/inter-agent-communication/module.md"
+    }
+      ]
+    },
+    {
+      "id": "part-9",
+      "title": "Optimization & Safety",
+      "description": "Optimizing performance and ensuring safe operation",
+      "modules": [
+    {
+      "id": "module-18",
+      "title": "Resource-Aware Optimization",
+      "description": "Optimizing agent behavior considering computational, temporal, and financial resource constraints.",
+      "path": "chapters/resource-optimization/module.md"
+    },
+    {
+      "id": "module-20",
+      "title": "Guardrails/Safety Patterns",
+      "description": "Implementing safety mechanisms, content filters, and compliance checks to ensure agents operate within defined boundaries.",
+      "path": "chapters/guardrails-safety/module.md"
+    },
+    {
+      "id": "module-21",
+      "title": "Evaluation and Monitoring",
+      "description": "Systematic assessment of agent performance, monitoring progress, and detecting operational anomalies in production environments.",
+      "path": "chapters/evaluation-monitoring/module.md"
+    },
+    {
+      "id": "module-23",
+      "title": "Exploration and Discovery",
+      "description": "Enabling agents to actively seek out novel information, uncover new possibilities, and identify unknown unknowns.",
+      "path": "chapters/exploration-discovery/module.md"
+    }
+      ]
+    }
+  ]
+}

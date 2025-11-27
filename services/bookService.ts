@@ -1,0 +1,205 @@
+import { Module, Part } from '../types';
+
+export interface BookMetadata {
+  name: string;
+  description: string;
+  author: string;
+  requestFramePermissions?: string[];
+  parts?: Part[]; // New: parts structure
+  modules?: Module[]; // Legacy: flat modules array (for backward compatibility)
+}
+
+export interface Book {
+  id: string;
+  metadata: BookMetadata;
+  parts?: Part[]; // New: parts structure
+  modules: Module[]; // Flattened modules for backward compatibility
+}
+
+/**
+ * Loads a book by its ID
+ * @param bookId The ID of the book (e.g., 'agentic-patterns')
+ * @returns Promise<Book> The loaded book with metadata and modules
+ */
+/**
+ * Flattens parts into a single modules array
+ */
+function flattenParts(parts: Part[]): Module[] {
+  return parts.flatMap(part => part.modules);
+}
+
+export async function loadBook(bookId: string): Promise<Book> {
+  try {
+    // Load metadata (which now includes parts or modules)
+    const metadataResponse = await fetch(`/books/${bookId}/metadata.json`);
+    if (!metadataResponse.ok) {
+      throw new Error(`Failed to load metadata for book: ${bookId}`);
+    }
+    const metadata: BookMetadata = await metadataResponse.json();
+
+    // Resolve relative paths to absolute paths
+    // The metadata.json is at /books/{bookId}/metadata.json
+    // So relative paths should be resolved relative to /books/{bookId}/
+    const bookBasePath = `/books/${bookId}`;
+
+    let parts: Part[] | undefined;
+    let modules: Module[];
+
+    // Check if metadata uses parts structure (new) or flat modules (legacy)
+    if (metadata.parts && Array.isArray(metadata.parts) && metadata.parts.length > 0) {
+      // New structure: parts containing modules
+      parts = metadata.parts.map(part => ({
+        ...part,
+        modules: part.modules.map(module => ({
+          ...module,
+          path: module.path.startsWith('/') 
+            ? module.path 
+            : `${bookBasePath}/${module.path}`
+        }))
+      }));
+      modules = flattenParts(parts);
+    } else if (metadata.modules && Array.isArray(metadata.modules) && metadata.modules.length > 0) {
+      // Legacy structure: flat modules array
+      modules = metadata.modules.map(module => ({
+        ...module,
+        path: module.path.startsWith('/') 
+          ? module.path 
+          : `${bookBasePath}/${module.path}`
+      }));
+    } else {
+      throw new Error(`Invalid metadata: neither parts nor modules array found for book: ${bookId}`);
+    }
+
+    return {
+      id: bookId,
+      metadata,
+      parts,
+      modules,
+    };
+  } catch (error) {
+    console.error(`Error loading book ${bookId}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Gets the default book ID
+ * In the future, this could be configurable or user-selected
+ */
+export function getDefaultBookId(): string {
+  return 'agentic-patterns';
+}
+
+/**
+ * Lists all available books
+ * Returns all book IDs that are available in the books directory
+ * First tries to get from API (for dynamic discovery), then falls back to hardcoded list
+ */
+export async function listAvailableBooks(): Promise<string[]> {
+  try {
+    // Try to get books from API (for dynamically uploaded books)
+    const response = await fetch('/api/books');
+    if (response.ok) {
+      const data = await response.json();
+      if (data.success && Array.isArray(data.bookIds) && data.bookIds.length > 0) {
+        return data.bookIds;
+      }
+    }
+  } catch (error) {
+    // API might not be available (e.g., in production)
+    console.debug('Books API not available, using fallback list');
+  }
+
+  // Fallback to hardcoded list
+  return [
+    'agentic-patterns',
+    'web-development',
+    'data-science',
+    'machine-learning',
+    'design-patterns'
+  ];
+}
+
+/**
+ * Loads metadata for all available books
+ * @returns Promise<Book[]> Array of all available books with their metadata
+ */
+export async function loadAllBooks(): Promise<Book[]> {
+  const bookIds = await listAvailableBooks();
+  const books = await Promise.all(
+    bookIds.map(async (bookId) => {
+      try {
+        return await loadBook(bookId);
+      } catch (error) {
+        console.error(`Failed to load book ${bookId}:`, error);
+        return null;
+      }
+    })
+  );
+  return books.filter((book): book is Book => book !== null);
+}
+
+/**
+ * Loads suggested questions for a book
+ * Checks cache API first (for generated questions), then falls back to static questions.json
+ * @param bookId The ID of the book
+ * @returns Promise with questions map (moduleId -> questions array)
+ */
+export async function loadBookQuestions(bookId: string): Promise<Record<string, string[]>> {
+  // First, try to load from cache API (for generated questions)
+  try {
+    const cacheResponse = await fetch(`/api/questions?bookId=${encodeURIComponent(bookId)}`);
+    if (cacheResponse.ok) {
+      const data = await cacheResponse.json();
+      if (data.success && data.questions) {
+        return data.questions;
+      }
+    }
+  } catch (error) {
+    // Cache API might not be available (e.g., in production)
+    // Fall through to static file
+  }
+
+  // Fall back to static questions.json file
+  try {
+    const response = await fetch(`/books/${bookId}/cache/questions.json`);
+    if (!response.ok) {
+      console.warn(`Failed to load questions for book: ${bookId}, using defaults`);
+      return {};
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`Error loading questions for book ${bookId}:`, error);
+    return {};
+  }
+}
+
+/**
+ * Saves questions to the cache (questions.json file)
+ * @param bookId The ID of the book
+ * @param questions The questions map to save
+ */
+export async function saveBookQuestions(bookId: string, questions: Record<string, string[]>): Promise<boolean> {
+  try {
+    const response = await fetch(`/api/questions?bookId=${encodeURIComponent(bookId)}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(questions),
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      if (result.success) {
+        console.log(`Questions saved to file system: ${result.path}`);
+        return true;
+      }
+    }
+    return false;
+  } catch (error) {
+    console.error('Error saving questions:', error);
+    return false;
+  }
+}
+

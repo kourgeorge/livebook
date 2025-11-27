@@ -1,0 +1,23 @@
+{
+  "module-7a": [
+    "How does logit masking differ from dynamically modifying tool definitions in terms of preserving KV-Cache efficiency?",
+    "What are the potential implications of model confusion when tools are not managed correctly?",
+    "In what scenarios might constrained tool use enhance the performance of a model compared to unrestricted tool availability?",
+    "Can you provide an example of a situation where logit masking would be beneficial in managing tool availability?",
+    "How might the principles of constrained tool use apply to other areas of machine learning or AI development?"
+  ],
+  "module-0": [
+    "What are the key differences between Generative AI and Agentic AI, and how do these differences influence system design?",
+    "How can understanding foundational workflow patterns enhance the development of reliable agentic systems?",
+    "In what scenarios would you prefer multi-agent collaboration over single-agent workflows, and why?",
+    "How do memory management and context influence an agent's ability to pursue objectives effectively?",
+    "What practical guidelines can be derived from real-world examples in the book to improve the implementation of agentic AI systems?"
+  ],
+  "module-1": [
+    "What are the key characteristics that differentiate intelligent agents from traditional reactive programs?",
+    "How do large language models (LLMs) serve as cognitive engines for intelligent systems, and what challenges arise in their orchestration?",
+    "In what ways can the frameworks built around AI agents impact their effectiveness and reliability in achieving complex goals?",
+    "How does the concept of an 'agentic system' relate to the broader landscape of artificial intelligence advancements?",
+    "What considerations should be taken into account when designing the infrastructure for intelligent systems to ensure they function optimally?"
+  ]
+}

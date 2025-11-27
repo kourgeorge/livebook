@@ -1,0 +1,70 @@
+# Constrained Tool Use Pattern
+- **Motivation**
+    - Toolbox analogy
+    - Adapt to available tools
+    - Limit tool availability
+- **Pattern Overview**
+    - **What it is**
+        - Manage tool availability
+        - Programmatic constraints
+    - **When to use**
+        - Stable tool set required
+        - Change agent's permissions
+    - **Why it matters**
+        - Maintain KV-Cache stability
+        - Prevent model confusion
+- **Key Concepts**
+    - **Logit Masking**
+    - **KV-Cache Stability**
+    - **Response Prefilling**
+    - **Context Engineering**
+    - **Fixed Tool Definitions**
+    - **State-Aware Constraints**
+- **How It Works**
+    - **Define All Tools**
+    - **Maintain Context Stability**
+    - **Apply Constraint (Masking)**
+    - **Prevent Selection**
+- **When to Use This Pattern**
+    - **✅ Use when**
+        - Enforce tool selection
+        - Fixed tool set needed
+        - Complex action space
+    - **❌ Avoid when**
+        - Simple tasks
+        - Dynamically altering tools
+        - Small stable tool set
+- **Decision Guidelines**
+    - Keep tool set fixed
+    - Use soft restrictions
+- **Practical Applications**
+    - **Prefix-Based Masking**
+    - **Preventing Tool Misuse**
+    - **State-Dependent Tool Access**
+    - **Environment-Based Constraints**
+    - **Workflow Stage Constraints**
+    - **Permission-Based Access**
+- **Implementation**
+    - **Prerequisites**
+    - **Basic Example**
+        - Prefix Design Strategy
+    - **Advanced Example**
+        - Response Prefilling
+    - **Framework-Specific Examples**
+        - Custom Logit Masking
+        - State Machine for Tool Availability
+- **Key Takeaways**
+    - Stability is crucial
+    - KV-Cache optimization
+    - Use programmatic constraints
+    - Prefix design importance
+    - Best practice for tool set
+    - Common pitfalls
+- **Related Patterns**
+    - **Stable, Append-Only Context**
+    - **Explicit Tool Definitions**
+    - **Memory Management**
+    - **Tool Use**
+    - **Routing**
+    - **State Management**
+- **References**
