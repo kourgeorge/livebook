@@ -14,17 +14,29 @@ export function cacheFilePlugin(): Plugin {
     name: 'cache-file-plugin',
     configResolved(config) {
       // Load environment variables and set them in process.env for server-side use
-      const env = loadEnv(config.mode, process.cwd(), '');
-      // Set API keys in process.env so they're available to server-side imports
-      if (env.GEMINI_API_KEY || env.API_KEY) {
+      // This gracefully handles missing .env.local files
+      try {
+        const env = loadEnv(config.mode, process.cwd(), '');
+        // Set API keys in process.env so they're available to server-side imports
+        // Use empty string as default if not found
         process.env.API_KEY = env.GEMINI_API_KEY || env.API_KEY || '';
         process.env.GEMINI_API_KEY = env.GEMINI_API_KEY || env.API_KEY || '';
+        process.env.AZURE_ENDPOINT = env.AZURE_ENDPOINT || '';
+        process.env.AZURE_API_KEY = env.AZURE_API_KEY || '';
+        process.env.AZURE_DEPLOYMENT_NAME = env.AZURE_DEPLOYMENT_NAME || '';
+        process.env.GEMINI_MODEL = env.GEMINI_MODEL || '';
+        process.env.LLM_PROVIDER = env.LLM_PROVIDER || '';
+      } catch (error) {
+        // If loading env fails (e.g., .env.local doesn't exist), set defaults
+        console.warn('Could not load environment variables, using defaults:', error);
+        process.env.API_KEY = '';
+        process.env.GEMINI_API_KEY = '';
+        process.env.AZURE_ENDPOINT = '';
+        process.env.AZURE_API_KEY = '';
+        process.env.AZURE_DEPLOYMENT_NAME = '';
+        process.env.GEMINI_MODEL = '';
+        process.env.LLM_PROVIDER = '';
       }
-      if (env.AZURE_ENDPOINT) process.env.AZURE_ENDPOINT = env.AZURE_ENDPOINT;
-      if (env.AZURE_API_KEY) process.env.AZURE_API_KEY = env.AZURE_API_KEY;
-      if (env.AZURE_DEPLOYMENT_NAME) process.env.AZURE_DEPLOYMENT_NAME = env.AZURE_DEPLOYMENT_NAME;
-      if (env.GEMINI_MODEL) process.env.GEMINI_MODEL = env.GEMINI_MODEL;
-      if (env.LLM_PROVIDER) process.env.LLM_PROVIDER = env.LLM_PROVIDER;
     },
     configureServer(server) {
       // Middleware to handle cache file operations

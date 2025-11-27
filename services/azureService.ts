@@ -1,13 +1,14 @@
 import { AzureOpenAI } from 'openai';
 import { LLMProviderInterface, LLMMessage, LLMResponse, LLMConfig } from './llmProvider';
 
-const AZURE_ENDPOINT = process.env.AZURE_ENDPOINT || '';
-const AZURE_API_KEY = process.env.AZURE_API_KEY || '';
-const AZURE_DEPLOYMENT_NAME = process.env.AZURE_DEPLOYMENT_NAME || 'gpt-4o';
-const AZURE_API_VERSION = process.env.OPENAI_API_VERSION || process.env.AZURE_API_VERSION || '2024-02-15-preview';
+const AZURE_ENDPOINT = (process.env.AZURE_ENDPOINT || '').trim();
+const AZURE_API_KEY = (process.env.AZURE_API_KEY || '').trim();
+const AZURE_DEPLOYMENT_NAME = (process.env.AZURE_DEPLOYMENT_NAME || 'gpt-4o').trim();
+const AZURE_API_VERSION = (process.env.OPENAI_API_VERSION || process.env.AZURE_API_VERSION || '2024-02-15-preview').trim();
 
 let client: AzureOpenAI | null = null;
 
+// Only initialize if both endpoint and API key are provided and not empty
 if (AZURE_ENDPOINT && AZURE_API_KEY) {
   try {
     client = new AzureOpenAI({

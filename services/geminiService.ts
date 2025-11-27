@@ -3,11 +3,20 @@ import { ChatMessage } from "../types";
 import { LLMProviderInterface, LLMMessage, LLMResponse, LLMConfig } from './llmProvider';
 import { sendLLMMessage } from './llmClientService';
 
-const API_KEY = process.env.API_KEY || '';
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+const API_KEY = (process.env.API_KEY || '').trim();
+const GEMINI_MODEL = (process.env.GEMINI_MODEL || 'gemini-2.5-flash').trim();
 
 // Initialize Gemini client (server-side only - API keys are not exposed to client)
-const ai = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;
+// Only initialize if API_KEY is not empty
+let ai: GoogleGenAI | null = null;
+if (API_KEY) {
+  try {
+    ai = new GoogleGenAI({ apiKey: API_KEY });
+  } catch (error) {
+    console.error('Failed to initialize Gemini client:', error);
+    ai = null;
+  }
+}
 
 // Check if Gemini is configured (server-side only)
 export function isGeminiConfigured(): boolean {
