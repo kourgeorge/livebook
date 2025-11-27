@@ -91,7 +91,16 @@ const LandingPage: React.FC<LandingPageProps> = ({ books, onSelectBook }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredBooks.length === 0 ? (
             <div className="col-span-full text-center py-12">
-              <p className="text-gray-500 text-lg">No books found matching your search.</p>
+              {books.length === 0 ? (
+                <div>
+                  <p className="text-gray-500 text-lg mb-4">No books available.</p>
+                  <p className="text-gray-400 text-sm">
+                    Books will appear here once they are loaded. Check that book metadata files exist in the books directory.
+                  </p>
+                </div>
+              ) : (
+                <p className="text-gray-500 text-lg">No books found matching your search.</p>
+              )}
             </div>
           ) : (
             filteredBooks.map((book) => (

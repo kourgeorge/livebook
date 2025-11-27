@@ -90,7 +90,7 @@ export async function loadBook(bookId: string): Promise<Book> {
  * In the future, this could be configurable or user-selected
  */
 export function getDefaultBookId(): string {
-  return 'agentic-patterns';
+  return 'agentic-patterns-principles-practices';
 }
 
 /**
@@ -113,13 +113,11 @@ export async function listAvailableBooks(): Promise<string[]> {
     // Silently fall through to hardcoded list
   }
 
-  // Fallback to hardcoded list
+  // Fallback to hardcoded list of books that actually exist
+  // Update this list to match the actual book directories in the books folder
   return [
-    'agentic-patterns',
-    'web-development',
-    'data-science',
-    'machine-learning',
-    'design-patterns'
+    'agentic-patterns-principles-practices',
+    'agentic-patterns.local'
   ];
 }
 
