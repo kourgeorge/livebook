@@ -1,4 +1,5 @@
 import { LLMMessage, LLMResponse, LLMConfig } from './llmProvider';
+import { withBaseUrl } from '../utils/pathUtils';
 
 /**
  * Client-side LLM service that proxies requests through the backend API
@@ -14,7 +15,7 @@ export async function sendLLMMessage(
   const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minute timeout
 
   try {
-    const response = await fetch('/api/llm', {
+    const response = await fetch(withBaseUrl('/api/llm'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

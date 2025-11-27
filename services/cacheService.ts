@@ -1,4 +1,5 @@
 import { ContentFormat } from '../components/ContentFormatSelector';
+import { withBaseUrl } from '../utils/pathUtils';
 
 /**
  * Cache service for storing and retrieving generated content
@@ -28,7 +29,7 @@ export class CacheService {
     // First, try to get from file system (in development)
     try {
       const response = await fetch(
-        `/api/cache?bookId=${encodeURIComponent(this.bookId)}&moduleId=${encodeURIComponent(moduleId)}&format=${encodeURIComponent(format)}`
+        withBaseUrl(`/api/cache?bookId=${encodeURIComponent(this.bookId)}&moduleId=${encodeURIComponent(moduleId)}&format=${encodeURIComponent(format)}`)
       );
       if (response.ok) {
         const data = await response.json();
@@ -90,7 +91,7 @@ export class CacheService {
 
     // Also save to file system (for persistent storage in development)
     try {
-      const response = await fetch('/api/cache', {
+      const response = await fetch(withBaseUrl('/api/cache'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

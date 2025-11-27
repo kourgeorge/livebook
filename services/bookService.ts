@@ -1,4 +1,5 @@
 import { Module, Part } from '../types';
+import { withBaseUrl } from '../utils/pathUtils';
 
 export interface BookMetadata {
   name: string;
@@ -31,7 +32,7 @@ function flattenParts(parts: Part[]): Module[] {
 export async function loadBook(bookId: string): Promise<Book> {
   try {
     // Load metadata (which now includes parts or modules)
-    const metadataResponse = await fetch(`/books/${bookId}/metadata.json`);
+    const metadataResponse = await fetch(withBaseUrl(`/books/${bookId}/metadata.json`));
     if (!metadataResponse.ok) {
       throw new Error(`Failed to load metadata for book: ${bookId}`);
     }
@@ -40,7 +41,7 @@ export async function loadBook(bookId: string): Promise<Book> {
     // Resolve relative paths to absolute paths
     // The metadata.json is at /books/{bookId}/metadata.json
     // So relative paths should be resolved relative to /books/{bookId}/
-    const bookBasePath = `/books/${bookId}`;
+    const bookBasePath = withBaseUrl(`/books/${bookId}`);
 
     let parts: Part[] | undefined;
     let modules: Module[];
@@ -52,8 +53,9 @@ export async function loadBook(bookId: string): Promise<Book> {
         ...part,
         modules: part.modules.map(module => ({
           ...module,
+          // Always ensure path has base URL
           path: module.path.startsWith('/') 
-            ? module.path 
+            ? withBaseUrl(module.path)
             : `${bookBasePath}/${module.path}`
         }))
       }));
@@ -62,8 +64,9 @@ export async function loadBook(bookId: string): Promise<Book> {
       // Legacy structure: flat modules array
       modules = metadata.modules.map(module => ({
         ...module,
+        // Always ensure path has base URL
         path: module.path.startsWith('/') 
-          ? module.path 
+          ? withBaseUrl(module.path)
           : `${bookBasePath}/${module.path}`
       }));
     } else {
@@ -98,7 +101,7 @@ export function getDefaultBookId(): string {
 export async function listAvailableBooks(): Promise<string[]> {
   try {
     // Try to get books from API (for dynamically uploaded books)
-    const response = await fetch('/api/books');
+    const response = await fetch(withBaseUrl('/api/books'));
     if (response.ok) {
       const data = await response.json();
       if (data.success && Array.isArray(data.bookIds) && data.bookIds.length > 0) {
@@ -106,8 +109,8 @@ export async function listAvailableBooks(): Promise<string[]> {
       }
     }
   } catch (error) {
-    // API might not be available (e.g., in production)
-    console.debug('Books API not available, using fallback list');
+    // API might not be available (e.g., in production on GitHub Pages)
+    // Silently fall through to hardcoded list
   }
 
   // Fallback to hardcoded list
@@ -131,7 +134,11 @@ export async function loadAllBooks(): Promise<Book[]> {
       try {
         return await loadBook(bookId);
       } catch (error) {
-        console.error(`Failed to load book ${bookId}:`, error);
+        // Silently skip books that don't exist (e.g., in production)
+        // Only log in development
+        if (import.meta.env.DEV) {
+          console.debug(`Book ${bookId} not found, skipping`);
+        }
         return null;
       }
     })
@@ -148,7 +155,7 @@ export async function loadAllBooks(): Promise<Book[]> {
 export async function loadBookQuestions(bookId: string): Promise<Record<string, string[]>> {
   // First, try to load from cache API (for generated questions)
   try {
-    const cacheResponse = await fetch(`/api/questions?bookId=${encodeURIComponent(bookId)}`);
+    const cacheResponse = await fetch(withBaseUrl(`/api/questions?bookId=${encodeURIComponent(bookId)}`));
     if (cacheResponse.ok) {
       const data = await cacheResponse.json();
       if (data.success && data.questions) {
@@ -156,20 +163,20 @@ export async function loadBookQuestions(bookId: string): Promise<Record<string, 
       }
     }
   } catch (error) {
-    // Cache API might not be available (e.g., in production)
+    // Cache API might not be available (e.g., in production on GitHub Pages)
     // Fall through to static file
   }
 
   // Fall back to static questions.json file
   try {
-    const response = await fetch(`/books/${bookId}/cache/questions.json`);
+    const response = await fetch(withBaseUrl(`/books/${bookId}/cache/questions.json`));
     if (!response.ok) {
-      console.warn(`Failed to load questions for book: ${bookId}, using defaults`);
+      // Silently return empty object if questions file doesn't exist
       return {};
     }
     return await response.json();
   } catch (error) {
-    console.error(`Error loading questions for book ${bookId}:`, error);
+    // Silently return empty object on error
     return {};
   }
 }
@@ -181,7 +188,7 @@ export async function loadBookQuestions(bookId: string): Promise<Record<string, 
  */
 export async function saveBookQuestions(bookId: string, questions: Record<string, string[]>): Promise<boolean> {
   try {
-    const response = await fetch(`/api/questions?bookId=${encodeURIComponent(bookId)}`, {
+    const response = await fetch(withBaseUrl(`/api/questions?bookId=${encodeURIComponent(bookId)}`), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -198,7 +205,7 @@ export async function saveBookQuestions(bookId: string, questions: Record<string
     }
     return false;
   } catch (error) {
-    console.error('Error saving questions:', error);
+    // Silently fail in production (API not available on GitHub Pages)
     return false;
   }
 }
