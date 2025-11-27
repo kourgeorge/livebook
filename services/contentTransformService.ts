@@ -248,10 +248,17 @@ Transform this content according to the instructions above. Return only the tran
       { role: 'user' as const, content: fullPrompt }
     ];
 
-    const result = await sendLLMMessage(messages, systemInstruction, {
-      temperature: 0.1, // Very low temperature to minimize hallucination and ensure fidelity to original content
-    });
-    const transformed = result.text || bodyContent;
+    let transformed = bodyContent;
+    try {
+      const result = await sendLLMMessage(messages, systemInstruction, {
+        temperature: 0.1, // Very low temperature to minimize hallucination and ensure fidelity to original content
+      });
+      transformed = result.text || bodyContent;
+    } catch (error) {
+      console.error("Error transforming content with LLM:", error);
+      // Return original content if LLM transformation fails
+      return content;
+    }
 
     // For flashcards format, parse JSON directly
     if (format === 'flashcards') {

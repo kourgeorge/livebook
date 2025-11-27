@@ -30,13 +30,27 @@ export async function sendLLMMessage(
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'LLM request failed');
+      let errorMessage = 'LLM request failed';
+      try {
+        const error = await response.json();
+        errorMessage = error.error || errorMessage;
+      } catch (e) {
+        // If response is not JSON, use status text
+        errorMessage = response.statusText || errorMessage;
+      }
+      
+      // Return a user-friendly error message instead of throwing
+      return {
+        text: `I'm sorry, but I encountered an error: ${errorMessage}. The LLM service may not be configured. Please check your API keys.`
+      };
     }
 
     const data = await response.json();
     if (!data.success) {
-      throw new Error(data.error || 'LLM request failed');
+      // Return a user-friendly error message instead of throwing
+      return {
+        text: `I'm sorry, but I encountered an error: ${data.error || 'LLM request failed'}. The LLM service may not be configured. Please check your API keys.`
+      };
     }
 
     return { text: data.text };
@@ -44,10 +58,15 @@ export async function sendLLMMessage(
     clearTimeout(timeoutId);
     if (error.name === 'AbortError') {
       console.error('LLM client error: Request timeout (5 minutes)');
-      throw new Error('LLM request timed out after 5 minutes. The content may be too large.');
+      return {
+        text: 'I\'m sorry, but the request timed out after 5 minutes. The content may be too large. Please try with a smaller request.'
+      };
     }
     console.error('LLM client error:', error);
-    throw error;
+    // Return a user-friendly error message instead of throwing
+    return {
+      text: `I'm sorry, but I encountered an error: ${error.message || 'LLM service unavailable'}. The LLM service may not be configured. Please check your API keys.`
+    };
   }
 }
 

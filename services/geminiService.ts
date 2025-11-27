@@ -94,8 +94,10 @@ export const sendMessageToGemini = async (
       model: LLM_PROVIDER === 'azure' ? undefined : GEMINI_MODEL,
     });
     return response.text;
-  } catch (error) {
+  } catch (error: any) {
     console.error("LLM API Error:", error);
-    return "Sorry, I encountered an error while processing your request.";
+    // sendLLMMessage now returns error messages instead of throwing, 
+    // but keep this as a safety net for unexpected errors
+    return "I'm sorry, but I encountered an error processing your request. The LLM service may not be configured. Please check your API keys.";
   }
 };

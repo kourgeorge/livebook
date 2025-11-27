@@ -562,11 +562,12 @@ export function cacheFilePlugin(): Plugin {
               res.end(JSON.stringify({ success: true, text: response.text }));
             } catch (error: any) {
               console.error('LLM API error:', error);
-              res.statusCode = 500;
+              // Return a user-friendly error message instead of failing completely
+              res.statusCode = 200; // Return 200 so client can handle gracefully
               res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify({ 
-                success: false, 
-                error: error.message || 'LLM request failed' 
+                success: true, // Mark as success so client receives the message
+                text: `I'm sorry, but the AI assistant is not currently configured. Please set up an LLM provider (Azure OpenAI or Gemini) by configuring the necessary API keys in your environment variables. Error: ${error.message || 'LLM service unavailable'}`
               }));
             }
           });

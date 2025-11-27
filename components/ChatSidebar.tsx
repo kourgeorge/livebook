@@ -221,17 +221,29 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ context, activeModule, bookId
     setInputValue('');
     setIsLoading(true);
 
-    const responseText = await sendMessageToGemini(messages, inputValue, context);
+    try {
+      const responseText = await sendMessageToGemini(messages, inputValue, context);
 
-    const modelMsg: ChatMessage = {
-      id: (Date.now() + 1).toString(),
-      role: 'model',
-      text: responseText,
-      timestamp: Date.now()
-    };
+      const modelMsg: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'model',
+        text: responseText,
+        timestamp: Date.now()
+      };
 
-    setMessages(prev => [...prev, modelMsg]);
-    setIsLoading(false);
+      setMessages(prev => [...prev, modelMsg]);
+    } catch (error: any) {
+      console.error('Error sending message:', error);
+      const errorMsg: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'model',
+        text: "I'm sorry, but I encountered an error processing your request. The LLM service may not be configured. Please check your API keys.",
+        timestamp: Date.now()
+      };
+      setMessages(prev => [...prev, errorMsg]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -252,17 +264,29 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({ context, activeModule, bookId
     setMessages(prev => [...prev, userMsg]);
     setIsLoading(true);
 
-    const responseText = await sendMessageToGemini(messages, question, context);
+    try {
+      const responseText = await sendMessageToGemini(messages, question, context);
 
-    const modelMsg: ChatMessage = {
-      id: (Date.now() + 1).toString(),
-      role: 'model',
-      text: responseText,
-      timestamp: Date.now()
-    };
+      const modelMsg: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'model',
+        text: responseText,
+        timestamp: Date.now()
+      };
 
-    setMessages(prev => [...prev, modelMsg]);
-    setIsLoading(false);
+      setMessages(prev => [...prev, modelMsg]);
+    } catch (error: any) {
+      console.error('Error sending message:', error);
+      const errorMsg: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'model',
+        text: "I'm sorry, but I encountered an error processing your request. The LLM service may not be configured. Please check your API keys.",
+        timestamp: Date.now()
+      };
+      setMessages(prev => [...prev, errorMsg]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleCopyQuestion = (text: string) => {
