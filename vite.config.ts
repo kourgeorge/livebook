@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
         host: '0.0.0.0',
       },
       plugins: [react(), cacheFilePlugin()],
-      base: "/livebook/",
+      base: "/livebook",
       define: {
         // API keys are kept server-side only - removed from client bundle for security
         // Only non-sensitive configuration is exposed to the client
